@@ -1,0 +1,2 @@
+Section,Sub-Section,Given DataType,Expected DataType,Given Length,Expected MaxLength,Error Code
+L3,L31,,word_characters,1,1,E02
