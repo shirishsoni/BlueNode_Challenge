@@ -1,6 +1,7 @@
 import standardDefinition
 import errorCodes
 import printReport
+import printSummary
 
 
 # flag, key, index, data_type, max_length
@@ -64,11 +65,11 @@ def getIndex(key, definition):
             return i
 
 
-def parseSection(section,report):
+def parseSection(section,report, summary):
     definition = standardDefinition.standard()
     # print(definition)
     key = section[0]
-    summary = []
+
 
     index = getIndex(key, definition)
 
@@ -96,6 +97,7 @@ def parseSection(section,report):
                         errcode
                     ]
                 )
+                summary.append(message)
                 continue
 
             if data_type == "digits":
@@ -136,17 +138,21 @@ def parseSection(section,report):
             ]
         )
 
+        summary.append(message)
+
 def main():
     f = open("input_file.txt", "r")
     report = [['Section', 'Sub-Section', 'Given DataType', 'Expected DataType', 'Given Length', 'Expected MaxLength',
                'Error Code']]
+    summary = []
     for line in f:
         line = line.strip()
         sections = line.split("&")
         print(sections)
-        parseSection(sections,report)
+        parseSection(sections,report,summary)
 
     printReport.report(report)
+    printSummary.summary(summary)
 
 
 if __name__ == '__main__':
