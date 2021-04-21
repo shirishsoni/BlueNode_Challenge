@@ -57,11 +57,10 @@ def getIndex(key, definition):
             return i
 
 
-def parseSection(section):
+def parseSection(section,report):
     definition = standardDefinition.standard()
     # print(definition)
     key = section[0]
-    report = [['Section', 'Sub-Section', 'Given DataType', 'Expected DataType', 'Given Length', 'Expected MaxLength', 'Error Code']]
     summary = []
 
     index = getIndex(key, definition)
@@ -142,16 +141,18 @@ def parseSection(section):
                 errcode
             ]
         )
-        print(report)
-    printReport.report(report)
 
 def main():
     f = open("input_file.txt", "r")
+    report = [['Section', 'Sub-Section', 'Given DataType', 'Expected DataType', 'Given Length', 'Expected MaxLength',
+               'Error Code']]
     for line in f:
         line = line.strip()
         sections = line.split("&")
         print(sections)
-        parseSection(sections)
+        parseSection(sections,report)
+
+    printReport.report(report)
 
 
 if __name__ == '__main__':
