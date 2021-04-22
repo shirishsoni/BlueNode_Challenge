@@ -1,10 +1,11 @@
 import standardDefinition   # module that reads the standard definition json
-import errorCodes   # module that reads the error code json
-import printReport  # module that prints Report.csv
-import printSummary # module that prints Summary.txt
-import unittest
+import errorCodes           # module that reads the error code json
+import printReport          # module that prints Report.csv
+import printSummary         # module that prints Summary.txt
+import UnitTest
 
 definition = standardDefinition.standard()
+
 
 # Function Get Error, parses the error jason object
 # Takes flag, key, index, data_type, max_length as parameters
@@ -81,7 +82,6 @@ def getIndex(key):
 # This is the most crucial function
 # It takes the section as parameter and evaluates it
 def parseSection(section, report, summary):
-    definition = standardDefinition.standard()
     # print(definition)
     key = section[0]  # The first value in the section represents the key, for instance L1
 
@@ -189,61 +189,19 @@ def main():
     printSummary.summary(summary)
 
     print("\nTesting through unit test \n")
+    UnitTest.TestCode.test_code_1(UnitTest.TestCode)
+    UnitTest.TestCode.test_code_2(UnitTest.TestCode)
+    UnitTest.TestCode.test_code_3(UnitTest.TestCode)
+    UnitTest.TestCode.test_code_4(UnitTest.TestCode)
+    UnitTest.TestCode.test_code_5(UnitTest.TestCode)
 
+    UnitTest.TestCode.test_index_1(UnitTest.TestCode)
+    UnitTest.TestCode.test_index_2(UnitTest.TestCode)
+    UnitTest.TestCode.test_index_3(UnitTest.TestCode)
+    UnitTest.TestCode.test_index_4(UnitTest.TestCode)
 
-class TestErrorCode(unittest.TestCase):
-
-    def test_code_1(self):
-        flag = [True, True, False]
-        error_code, message = getErrors(flag, "L1", 1, "digits", 3)
-        assert error_code == "E01"
-        print("Test error code 1 successful\n")
-
-    def test_code_2(self):
-        flag = [False, True, False]
-        error_code, message = getErrors(flag, "L1", 1, "digits", 3)
-        assert error_code == "E02"
-        print("Test error code 2 successful\n")
-
-    def test_code_3(self):
-        flag = [True, False, False]
-        error_code, message = getErrors(flag, "L1", 1, "digits", 3)
-        assert error_code == "E03"
-        print("Test error code 3 successful\n")
-
-    def test_code_4(self):
-        flag = [False, False, False]
-        error_code, message = getErrors(flag, "L1", 1, "digits", 3)
-        assert error_code == "E04"
-        print("Test error code 4 successful\n")
-
-    def test_code_5(self):
-        flag = [False, False, True]
-        error_code, message = getErrors(flag, "L1", 1, "digits", 3)
-        assert error_code == "E05"
-        print("Test error code 5 successful\n")
-
-    def test_index_1(self):
-        index = getIndex('L1')
-        assert index == 0
-        print("Test index 1 successful\n")
-
-    def test_index_2(self):
-        index = getIndex('L2')
-        assert index == 1
-        print("Test index 2 successful\n")
-
-    def test_index_3(self):
-        index = getIndex('L3')
-        assert index == 2
-        print("Test index 3 successful\n")
-
-    def test_index_4(self):
-        index = getIndex('L4' )
-        assert index == 3
-        print("Test index 4 successful\n")
+    UnitTest.TestCode.test_parser1(UnitTest.TestCode)
 
 
 if __name__ == '__main__':
     main()
-    unittest.main()
