@@ -77,6 +77,7 @@ def getIndex(key):
     for i in range(0, len(definition)):
         if key == definition[i]["key"]:
             return i
+    return -1
 
 
 # This is the most crucial function
@@ -86,84 +87,84 @@ def parseSection(section, report, summary):
     key = section[0]  # The first value in the section represents the key, for instance L1
 
     index = getIndex(key)  # Fetching the index of the key in the definition
+    if index >= 0:
+        for i in range(0, len(definition[index]["sub_sections"])):  # Iterating through the sub-sections of the section
 
-    for i in range(0, len(definition[index]["sub_sections"])):  # Iterating through the sub-sections of the section
+            # Flag/Boolean values representing different conditions with combination of true and false
+            flag = [False, False, False]
 
-        # Flag/Boolean values representing different conditions with combination of true and false
-        flag = [False, False, False]
+            data_type = definition[index]["sub_sections"][i]["data_type"]    # Expected data type of the sub-section
+            max_length = definition[index]["sub_sections"][i]["max_length"]  # Expected character length
+            given_dt = 'others'       # Supposing that the given data type is others
+            given_length = 0          # Supposing that the given length is 0
 
-        data_type = definition[index]["sub_sections"][i]["data_type"]    # Expected data type of the sub-section
-        max_length = definition[index]["sub_sections"][i]["max_length"]  # Expected character length
-        given_dt = 'others'       # Supposing that the given data type is others
-        given_length = 0          # Supposing that the given length is 0
+            # Exception handling using try and except
+            try:
 
-        # Exception handling using try and except
-        try:
+                # Checking if the value in given subsection is a an empty value
+                if len(section[i + 1]) < 1:
+                    errcode, message = getErrors(flag, key, i+1, data_type, max_length) # Function call to fetch error code
+                    # Appending the error code and section details into the report object
+                    report.append(
+                        [
+                            key,
+                            key + str(i + 1),
+                            given_dt,
+                            data_type,
+                            given_length,
+                            max_length,
+                            errcode
+                        ]
+                    )
 
-            # Checking if the value in given subsection is a an empty value
-            if len(section[i + 1]) < 1:
-                errcode, message = getErrors(flag, key, i+1, data_type, max_length) # Function call to fetch error code
-                # Appending the error code and section details into the report object
-                report.append(
-                    [
-                        key,
-                        key + str(i + 1),
-                        given_dt,
-                        data_type,
-                        given_length,
-                        max_length,
-                        errcode
-                    ]
-                )
+                    # Appending the error message in the summary object
+                    summary.append(message)
+                    continue
 
-                # Appending the error message in the summary object
-                summary.append(message)
-                continue
+                # Checking if the given datatype is the expected data type
+                if data_type == "digits":
+                    if section[i + 1].isdigit():
+                        flag[0] = True
+                        given_dt = 'digits'
+                    elif all(x.isalpha() or x.isspace() for x in section[i + 1]):
+                        given_dt = 'word_characters'
+                else:
+                    if all(x.isalpha() or x.isspace() for x in section[i + 1]):
+                        flag[0] = True
+                        given_dt = 'word_characters'
+                    elif section[i + 1].isdigit():
+                        given_dt = 'digits'
 
-            # Checking if the given datatype is the expected data type
-            if data_type == "digits":
-                if section[i + 1].isdigit():
-                    flag[0] = True
-                    given_dt = 'digits'
-                elif all(x.isalpha() or x.isspace() for x in section[i + 1]):
-                    given_dt = 'word_characters'
-            else:
-                if all(x.isalpha() or x.isspace() for x in section[i + 1]):
-                    flag[0] = True
-                    given_dt = 'word_characters'
-                elif section[i + 1].isdigit():
-                    given_dt = 'digits'
+                # Checking the length is under the max length
+                given_length = len(section[i + 1])
+                if given_length <= max_length:
+                    flag[1] = True
 
-            # Checking the length is under the max length
-            given_length = len(section[i + 1])
-            if given_length <= max_length:
-                flag[1] = True
+                # Fetching the error code based on section evaluation
+                errcode, message = getErrors(flag, key, i+1, data_type, max_length)
 
-            # Fetching the error code based on section evaluation
-            errcode, message = getErrors(flag, key, i+1, data_type, max_length)
+        # Exception raised when the given section is missing a sub-section since there would be no value at that index
+            except IndexError:
+                flag[2] = True
+                errcode, message = getErrors(flag, key, i + 1, data_type, max_length)
+                given_dt = ""
+                given_length = ""
 
-    # Exception is raised when the given section is missing a sub-section since there would be no value at that index
-        except IndexError:
-            flag[2] = True
-            errcode, message = getErrors(flag, key, i + 1, data_type, max_length)
-            given_dt = ""
-            given_length = ""
+            # Appending the error code and section details into the report object
+            report.append(
+                [
+                    key,
+                    key+str(i+1),
+                    given_dt,
+                    data_type,
+                    given_length,
+                    max_length,
+                    errcode
+                ]
+            )
 
-        # Appending the error code and section details into the report object
-        report.append(
-            [
-                key,
-                key+str(i+1),
-                given_dt,
-                data_type,
-                given_length,
-                max_length,
-                errcode
-            ]
-        )
-
-        # Appending the error message in the summary object
-        summary.append(message)
+            # Appending the error message in the summary object
+            summary.append(message)
 
 
 # Main function to call the parse function
