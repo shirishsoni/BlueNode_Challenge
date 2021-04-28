@@ -2,7 +2,6 @@ import standardDefinition   # module that reads the standard definition json
 import errorCodes           # module that reads the error code json
 import printReport          # module that prints Report.csv
 import printSummary         # module that prints Summary.txt
-import UnitTest
 
 definition = standardDefinition.standard()
 
@@ -188,21 +187,6 @@ def main():
     # Printing Report and summary
     printReport.report(report)
     printSummary.summary(summary)
-
-    print("\nTesting through unit test \n")
-    UnitTest.TestCode.test_code_1(UnitTest.TestCode)
-    UnitTest.TestCode.test_code_2(UnitTest.TestCode)
-    UnitTest.TestCode.test_code_3(UnitTest.TestCode)
-    UnitTest.TestCode.test_code_4(UnitTest.TestCode)
-    UnitTest.TestCode.test_code_5(UnitTest.TestCode)
-
-    UnitTest.TestCode.test_index_1(UnitTest.TestCode)
-    UnitTest.TestCode.test_index_2(UnitTest.TestCode)
-    UnitTest.TestCode.test_index_3(UnitTest.TestCode)
-    UnitTest.TestCode.test_index_4(UnitTest.TestCode)
-
-    UnitTest.TestCode.test_parser1(UnitTest.TestCode)
-
 
 if __name__ == '__main__':
     main()
